@@ -14,7 +14,7 @@ import json
 from data_loader import (
     VAR_CONFIG, geojson_prov, geojson_sub, 
     province_border_geojson, district_border_geojson,
-    get_dashboard_data, get_dropdown_options, min_year, max_year 
+    get_dashboard_data, get_radar_dtw_data, get_dropdown_options, min_year, max_year 
 )
 
 EXTERNAL_STYLESHEETS = [
@@ -403,8 +403,6 @@ def prepare_all_data(var_name, slider_value, sel_provs, sel_dists, sel_subs, vie
         dff = dff_dtw
         current_col = dtw_col
         
-        # 1. กำหนดค่ามาตรฐานสำหรับ All Provinces (0-10)
-        # 2. กำหนดค่าเฉพาะตัวแปรสำหรับระดับย่อย (Sub-level)
         if level_state == 'all_provinces':
             selected_z_max = 10
         else:
@@ -417,7 +415,6 @@ def prepare_all_data(var_name, slider_value, sel_provs, sel_dists, sel_subs, vie
             }
             selected_z_max = range_config.get(current_col, 15)
 
-        # อัปเดตพารามิเตอร์ส่งไปยังหน้าบ้าน (Map/Charts)
         filter_params.update({
             'view_mode': 'dtw', 
             'current_col': current_col, 
@@ -428,10 +425,19 @@ def prepare_all_data(var_name, slider_value, sel_provs, sel_dists, sel_subs, vie
         })
         
         map_agg = dff.groupby(dtw_key_col, as_index=False)[current_col].mean()
-        trend_data = dff.groupby('year', as_index=False)[current_col].mean()
         rank_data = map_agg.copy()
-        stats_grouped = dff.groupby(['province', 'district', 'subdistrict'] if level_state != 'all_provinces' else ['province'], as_index=False)[current_col].mean()
+        stats_grouped = dff.groupby(
+            ['province', 'district', 'subdistrict'] if level_state != 'all_provinces' else ['province'],
+            as_index=False
+        )[current_col].mean()
 
+        # 🟢 Temporal Trend ใช้ get_radar_dtw_data() แยก เพื่อดึง path ที่ถูกต้องตาม scope
+        dff_trend, _ = get_radar_dtw_data(q_start_year, q_end_year, sel_provs, sel_dists, sel_subs)
+        if not dff_trend.empty and current_col in dff_trend.columns:
+            trend_data = dff_trend.groupby('year', as_index=False)[current_col].mean()
+        else:
+            trend_data = dff.groupby('year', as_index=False)[current_col].mean()
+        
     # Merge Location Names for Ranking Table
     # Merge Location Names for Ranking Table
     if 'unique_id' in rank_data.columns:
