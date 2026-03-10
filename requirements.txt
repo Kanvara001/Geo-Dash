@@ -1,0 +1,9 @@
+dash
+dash-bootstrap-components
+pandas
+plotly
+geopandas
+pyarrow
+shapely
+Flask-Caching
+duckdb

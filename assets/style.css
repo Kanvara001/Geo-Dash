@@ -1,0 +1,209 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap');
+
+:root {
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --primary: #0ea5e9;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-light: #e2e8f0;
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+body {
+    font-family: 'Sarabun', sans-serif; /* ใช้ Sarabun เป็น Default เพื่อให้อ่านง่าย */
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* --- 🖋️ Fonts Class --- */
+/* ใช้ .font-header สำหรับหัวข้อให้ดูเท่ */
+.font-header { font-family: 'Prompt', sans-serif !important; }
+/* ใช้ .font-body สำหรับเนื้อหายาวๆ */
+.font-body { font-family: 'Sarabun', sans-serif !important; }
+
+/* --- ☁️ Clean Card --- */
+.clean-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.clean-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary);
+}
+
+/* --- 🌈 Gradient Text --- */
+.gradient-text {
+    background: -webkit-linear-gradient(45deg, #1e3c72, #2a5298);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+/* --- 🧊 Icon Box --- */
+.icon-box-soft {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0; 
+    transition: 0.3s;
+}
+
+/* --- 🔘 Modern Tabs --- */
+.clean-tabs .nav-link {
+    color: var(--text-muted) !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 1rem;
+    font-family: 'Prompt', sans-serif; /* Tabs ใช้ Prompt */
+    padding: 12px 25px;
+    border-radius: 8px !important;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.clean-tabs .nav-link.active {
+    background-color: #e0f2fe !important;
+    color: #0284c7 !important;
+    font-weight: 600;
+}
+
+/* --- 👤 Team Member --- */
+.team-img-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    padding: 3px;
+    background: #f1f5f9;
+    border: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- 📊 Table & Badge --- */
+.table-clean th {
+    font-family: 'Prompt', sans-serif;
+    background-color: transparent !important;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--border-light);
+    font-weight: 600;
+    padding: 15px;
+}
+.table-clean td {
+    font-family: 'Sarabun', sans-serif;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-muted);
+    vertical-align: middle;
+    padding: 15px;
+}
+
+/* --- 🦸 Hero Header --- */
+.hero-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 60px 0 60px 0; /* ปรับลด padding-bottom ลงเพราะเราไม่ซ้อนการ์ดแล้ว */
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.feature-card { transition: transform 0.3s; border: none; }
+.feature-card:hover { transform: translateY(-5px); }
+
+
+/* --- 🛠️ Sidebar Layout System --- */
+
+#sidebar-container {
+    width: 600px; /* 🟢 กว้างจุใจตามที่คุณตั้งไว้ */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: var(--bg-card);
+    z-index: 1050;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    
+    resize: horizontal; 
+    overflow: visible; /* สำคัญ: เพื่อให้ปุ่มที่ลอยอยู่นอกขอบไม่หายไป */
+    min-width: 350px;
+    max-width: 60vw;
+}
+
+#page-content {
+    /* 🟢 ปรับให้เท่ากับความกว้าง Sidebar (600px) เพื่อไม่ให้เนื้อหาเกยกัน */
+    margin-left: 600px; 
+    width: calc(100% - 600px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- 🔘 Toggle Button (ย้ายมาไว้ตรงกลางเป๊ะ) --- */
+.sidebar-toggle-btn {
+    position: absolute;
+    /* 🟢 สูตรกึ่งกลางแนวตั้ง */
+    top: 50%;
+    transform: translateY(-50%); 
+    
+    right: -15px;   /* ลอยกึ่งกลางขอบขวา */
+    width: 30px;
+    height: 30px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    z-index: 1100;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--primary);
+    color: white;
+    /* รักษาตำแหน่งกึ่งกลางไว้ขณะขยายตัว */
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* --- 🌫️ States --- */
+.sidebar-collapsed {
+    transform: translateX(-100%) !important;
+}
+
+/* เมื่อซ่อน Sidebar ขยับปุ่มมาทางขวาเพื่อให้กดเรียกกลับมาได้ง่าย */
+.sidebar-collapsed .sidebar-toggle-btn {
+    right: -45px; 
+    background: var(--primary);
+    color: white;
+    /* ป้องกัน transform ทับกัน */
+    transform: translateY(-50%); 
+}
+
+.content-fluid {
+    margin-left: 0 !important;
+    width: 100% !important;
+}
