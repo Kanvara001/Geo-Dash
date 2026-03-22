@@ -13,7 +13,7 @@ VAR_CONFIG = {
     'LST': {'dtw': 'dtw_lst_index', 'raw': 'LST', 'color': 'Reds', 'line_color': '#d62728', 'label': 'Temperature (LST)'},
     'Soil Moisture': {'dtw': 'dtw_soilmoisture_index', 'raw': 'SOILMOISTURE', 'color': 'Blues', 'line_color': '#1f77b4', 'label': 'Soil Moisture'},
     'Rainfall': {'dtw': 'dtw_rainfall_index', 'raw': 'RAINFALL', 'color': 'Teal', 'line_color': '#17becf', 'label': 'Rainfall'},
-    'Fire Count': {'dtw': 'dtw_firecount_index', 'raw': 'FIRECOUNT', 'color': 'Oranges', 'line_color': '#ff7f0e', 'label': 'Fire Count'}
+    'Fire Count': {'dtw': 'dtw_firecount_index', 'raw': 'FIRECOUNT', 'color': 'Oranges', 'line_color': '#ff7f0e', 'label': 'Fire Spots'}
 }
 
 RAW_DATA_PATH = 'data/merged_dataset_FILLED.parquet'

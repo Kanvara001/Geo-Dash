@@ -33,7 +33,7 @@ VAR_CONFIG = {
     },
     "Fire Count": {
         "dtw": "dtw_firecount_index", "raw": "FIRECOUNT", "color": "#f97316",
-        "label": "Fire Count", "base_key": "firecount"
+        "label": "Fire Spots", "base_key": "firecount"  # ← เปลี่ยน label
     }
 }
 
@@ -311,7 +311,7 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
             dtw_col = VAR_CONFIG[name]['dtw']
             mean_val = dff_dtw_radar[dtw_col].mean()
             radar_vals.append(round(mean_val, 2) if pd.notnull(mean_val) else 0)
-            radar_cols.append(name)
+            radar_cols.append(VAR_CONFIG[name]['label'])
 
     if radar_vals:
         radar_vals.append(radar_vals[0])
@@ -374,7 +374,7 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
                             x=line_agg[x_col], 
                             y=line_agg[c['dtw']], 
                             mode='lines+markers', 
-                            name=name, 
+                            name=VAR_CONFIG[name]['label'], 
                             line=dict(color=c['color'], width=2.5)
                         ))
     
@@ -427,7 +427,7 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
                         
                         fig_line_raw.add_trace(go.Scatter(
                             x=line_raw_agg[x_col], y=y_norm, customdata=y_values,
-                            mode='lines+markers', name=name, 
+                            mode='lines+markers', name=VAR_CONFIG[name]['label'], 
                             line=dict(color=c['color'], width=2), marker=dict(size=6),
                             hovertemplate='<b>%{y:.2f} (Norm)</b><br>Real Val: %{customdata:,.2f}<extra></extra>' 
                         ))
@@ -509,13 +509,13 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
         # --- 🟢 ปรับคำอธิบาย Tooltip ให้เหมาะสมเชิงวิชาการ (Scientific Context) ---
         # (ส่วนนี้คงเดิมตามความเหมาะสมที่คุณต้องการ)
         risk_tooltips = {
-            "NDVI": [
+            "Vegetation (NDVI)": [
                 html.B("Vegetation Deviation Index (DTW)"), html.Br(),
                 f"แสดงค่าความเบี่ยงเบนของรูปทรงการเจริญเติบโตพืชพรรณในปี {latest_year}", html.Br(),
                 "เปรียบเทียบกับพฤติกรรมมัธยฐานในกรอบเวลาที่เลือก", html.Br(),
                 html.Small("• ค่าสูงบ่งบอกถึงการเปลี่ยนแปลงของรอบการเพาะปลูกที่ผิดปกติ", className="text-warning")
             ],
-            "LST": [
+            "Temperature (LST)": [
                 html.B("Thermal Anomaly Index (DTW)"), html.Br(),
                 f"ตรวจจับความผิดปกติของอุณหภูมิพื้นผิวในปี {latest_year}", html.Br(),
                 "วิเคราะห์ผ่านระยะห่างเชิงจังหวะเวลา (Temporal Distance)", html.Br(),
@@ -533,7 +533,7 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
                 "ใช้ระบุพื้นที่ที่มีรูปแบบการตกของฝนฉีกตัวจากเกณฑ์ปกติ", html.Br(),
                 html.Small("• ค่า Freq สูง บ่งบอกถึงพื้นที่ประสบความแปรปรวนของสภาพอากาศซ้ำซาก", className="text-danger")
             ],
-            "Fire Count": [
+            "Fire Spots": [
                 html.B("Fire Activity Deviation Index"), html.Br(),
                 f"ความเบี่ยงเบนของกิจกรรมการเผาในรอบปี {latest_year}", html.Br(),
                 "เปรียบเทียบทั้งในเชิงปริมาณและจังหวะเวลาการเกิดจุดความร้อน", html.Br(),
@@ -547,9 +547,9 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
             html.Div(style={"height": "5px", "backgroundColor": color, "borderTopLeftRadius": "8px", "borderTopRightRadius": "8px"}),
             dbc.CardBody([
                 html.Div([
-                    html.Span(name, className="fw-bold", style={"fontSize": "0.9rem", "color": "#444"}),
+                    html.Span(conf['label'], className="fw-bold", style={"fontSize": "0.9rem", "color": "#444"}),
                     html.I(className="fas fa-info-circle ms-2 text-muted", id=tooltip_id_risk, style={"cursor": "pointer", "fontSize": "0.8rem"}),
-                    dbc.Tooltip(risk_tooltips.get(name, "Statistical Deviation Analysis"), target=tooltip_id_risk, placement="top"),
+                    dbc.Tooltip(risk_tooltips.get(conf['label'], "Statistical Deviation Analysis"), target=tooltip_id_risk, placement="top"),
                 ], className="d-flex align-items-center mb-2 border-bottom pb-2"),
                 html.Div(card_body_risk)
             ], className="p-3")
@@ -611,7 +611,7 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
 
         # --- 🟢 ส่วนคำอธิบาย Tooltip (Raw Data Context) ---
         var_tooltips = {
-            "NDVI": [
+            "Vegetation (NDVI)": [
                 html.B("NDVI: ดัชนีความเขียวขจีของพืชพรรณ"), html.Br(),
                 html.Small("สะท้อนความสมบูรณ์ของพืชพรรณเฉลี่ย", className="text-info"), html.Br(),
                 "• ", html.B("> 0.5:"), " ป่าสมบูรณ์หรือพื้นที่เกษตรหนาแน่น", html.Br(),
@@ -619,7 +619,7 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
                 "• ", html.B("< 0.1:"), " พื้นที่โล่ง หิน หรือสิ่งปลูกสร้าง", html.Br(),
                 "• ", html.B("ค่าติดลบ:"), " พื้นที่แหล่งน้ำ"
             ],
-            "LST": [
+            "Temperature (LST)": [
                 html.B("LST: อุณหภูมิพื้นผิวดิน"), html.Br(),
                 html.Small("อุณหภูมิผิวสัมผัสเฉลี่ยที่ตรวจวัดโดยดาวเทียม (°C)", className="text-info"), html.Br(),
                 "อุณหภูมิพื้นผิวเฉลี่ยของพื้นผิวดินที่ตรวจวัดได้จากดาวเทียม ", html.Br(),
@@ -641,8 +641,8 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
                 "• ", html.B("100 - 200:"), " ปริมาณฝนตามฤดูกาลปกติ", html.Br(),
                 "• ", html.B("> 300:"), " ฝนตกชุก/ตกหนัก เสี่ยงต่ออุทกภัย"
             ],
-            "Fire Count": [
-                html.B("Fire Count: จำนวนจุดความร้อน (Hotspots)"), html.Br(),
+            "Fire Spots": [
+                html.B("Fire Spots : จำนวนจุดความร้อน (Hotspots)"), html.Br(),
                 html.Small("จำนวนจุดการเผาไหม้สะสมที่ตรวจพบในพื้นที่", className="text-info"), html.Br(),
                 "• ", html.B("0:"), " สภาวะปกติ", html.Br(),
                 "• ", html.B("1 - 5:"), " การเผาในที่โล่งหรือกิจกรรมไฟป่าขนาดเล็ก", html.Br(),
@@ -652,15 +652,14 @@ def update_overview(years, prov_f, dist_f, sub_f, selected_vars):
 
         # ID สำหรับ Tooltip ของแต่ละกล่อง (ต้องไม่ซ้ำกับส่วนอื่น)
         tooltip_id_extreme = f"tt-extreme-{conf['base_key']}"
-
         card_extreme = dbc.Card([
             html.Div(style={"height": "5px", "backgroundColor": color, "borderTopLeftRadius": "8px", "borderTopRightRadius": "8px"}),
             dbc.CardBody([
                 html.Div([
-                    html.Span(name, className="fw-bold", style={"fontSize": "0.9rem", "color": "#444"}),
+                    html.Span(conf['label'], className="fw-bold", style={"fontSize": "0.9rem", "color": "#444"}),
                     # 🟢 เพิ่มไอคอน Info และ Tooltip ตรงนี้
                     html.I(className="fas fa-info-circle ms-2 text-muted", id=tooltip_id_extreme, style={"cursor": "pointer", "fontSize": "0.8rem"}),
-                    dbc.Tooltip(var_tooltips.get(name, "ข้อมูลตัวแปร"), target=tooltip_id_extreme, placement="top"),
+                    dbc.Tooltip(var_tooltips.get(conf['label'], "ข้อมูลตัวแปร"), target=tooltip_id_extreme, placement="top"),
                 ], className="mb-2 border-bottom pb-2 d-flex align-items-center"),
                 dbc.Tabs([
                     dbc.Tab(make_scroll_table(max_rows), label="Highest (10)", tab_style={"fontSize":"0.7rem"}, active_label_style={"fontWeight":"bold", "color":color}),

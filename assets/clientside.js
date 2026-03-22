@@ -25,6 +25,7 @@ window.dash_clientside.clientside = {
                     x: params.heatmap_matrix.x,
                     y: params.heatmap_matrix.y,
                     colorscale: params.color_scale || 'Viridis',
+                    reversescale: params.reversescale || false,
                     hovertemplate: `Area: %{y}<br>Date: %{x}<br>Value: %{z:.2f}<extra></extra>`,
                     colorbar: { title: { text: params.var_label, font: { family: 'Prompt' } } }
                 }],

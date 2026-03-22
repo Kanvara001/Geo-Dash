@@ -132,7 +132,7 @@ gee_table_rows = [
     ("LST", "Float", "อุณหภูมิพื้นผิวโลก", "Kelvin (K)", "1,000m / 8-day"),
     ("Soil Moisture", "Float", "ความชื้นในดินชั้นผิว", "m³/m³", "10,000m / 3-day"),
     ("Rainfall", "Float", "ปริมาณน้ำฝนสะสม", "mm", "10,000m / Daily"),
-    ("Fire Count", "Integer", "จำนวนวันที่เกิดไฟป่า", "Count (Days)", "1,000m / Daily"),
+    ("Fire Spots", "Integer", "จำนวนวันที่เกิดไฟป่า", "Count (Days)", "1,000m / Daily"),
 ]
 
 dtw_threshold_content = html.Div([
@@ -204,7 +204,7 @@ var_cards_data = [
         ]
     },
     {
-        "title": "Fire Count", "sub": "Active Fire Hotspots per Month",
+        "title": "Fire Spots", "sub": "Active Fire Hotspots per Month",
         "color": "#f97316", "icon": "🔥",
         "unit": "ความถี่ (Count/Month)",
         "source": "MODIS MCD64A1 (1km / Daily) → Monthly Sum",
@@ -307,7 +307,7 @@ about_tab = html.Div([
                     "ผู้วิจัยปรับความละเอียดเชิงพื้นที่ทุกตัวแปรเป็น ",
                     html.Strong("1,000 เมตร/พิกเซล"), " และความละเอียดเชิงเวลาเป็น ",
                     html.Strong("รายเดือน"),
-                    " โดย NDVI, LST, Soil Moisture ใช้ค่าเฉลี่ยรายเดือน ส่วน Rainfall และ Fire Count ใช้ผลรวมรายเดือน"
+                    " โดย NDVI, LST, Soil Moisture ใช้ค่าเฉลี่ยรายเดือน ส่วน Rainfall และ Fire Spots ใช้ผลรวมรายเดือน"
                 ], style={"fontSize": "0.85rem", "color": "#64748b", "marginTop": "12px", "marginBottom": "0"}),
             ], lg=12)
         ], className="mb-5"),
@@ -401,12 +401,131 @@ about_tab = html.Div([
             ], lg=12)
         ]),
 
+        section_divider(),
+
+        # --- Acknowledgements ---
+        dbc.Row([
+            dbc.Col([
+                section_label("Acknowledgements", "🙏"),
+                html.H3("กิตติกรรมประกาศ", style={**SECTION_HEADER_STYLE, "fontSize": "1.4rem"}, className="mb-4"),
+            ], lg=12)
+        ]),
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    # ขอบคุณมหาวิทยาลัย
+                    html.Div([
+                        html.Span("🏛️", style={"fontSize": "1.2rem", "marginRight": "10px", "flexShrink": "0"}),
+                        html.Div([
+                            html.Div("มหาวิทยาลัยขอนแก่น",
+                                     style={"fontWeight": "700", "fontSize": "0.9rem", "color": "#0f172a"}),
+                            html.Div("ขอขอบพระคุณมหาวิทยาลัยขอนแก่นที่ได้กรุณาสนับสนุนทรัพยากรด้านระบบเซิร์ฟเวอร์ อันเป็นพื้นฐานสำคัญในการพัฒนาและเผยแพร่ระบบสารสนเทศนี้",
+                                     style={"fontSize": "0.82rem", "color": "#64748b", "lineHeight": "1.7", "marginTop": "2px"}),
+                        ]),
+                    ], className="d-flex align-items-start mb-4"),
+
+                    html.Hr(style={"borderColor": "#f1f5f9", "margin": "0 0 20px 0"}),
+
+                    # ขอบคุณผู้เชี่ยวชาญ
+                    html.Div([
+                        html.Span("👨‍🔬", style={"fontSize": "1.2rem", "marginRight": "10px", "flexShrink": "0"}),
+                        html.Div([
+                            html.Div("ผู้ทรงคุณวุฒิและผู้เชี่ยวชาญ",
+                                     style={"fontWeight": "700", "fontSize": "0.9rem", "color": "#0f172a", "marginBottom": "12px"}),
+                            html.Div("คณะผู้จัดทำขอขอบพระคุณผู้ทรงคุณวุฒิทุกท่านที่ได้กรุณาสละเวลาให้คำแนะนำและข้อเสนอแนะอันเป็นประโยชน์ยิ่งในการปรับปรุงและพัฒนาระบบ",
+                                     style={"fontSize": "0.82rem", "color": "#64748b", "lineHeight": "1.7", "marginBottom": "14px"}),
+                            dbc.Row([
+                                dbc.Col([
+                                    html.Div([
+                                        html.Div("ผศ. ดร.เปรม จันทร์สว่าง",
+                                                 style={"fontWeight": "600", "fontSize": "0.85rem", "color": "#0f172a"}),
+                                        html.Div("สาขาวิชาสถิติและวิทยาการข้อมูล คณะวิทยาศาสตร์ มหาวิทยาลัยขอนแก่น",
+                                                 style={"fontSize": "0.78rem", "color": "#64748b"}),
+                                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px",
+                                               "padding": "10px 14px", "borderLeft": "3px solid #0ea5e9"}),
+                                ], md=6, className="mb-2"),
+                                dbc.Col([
+                                    html.Div([
+                                        html.Div("ผศ. ดร.ธรรมรัตน์ กลีบเมฆ",
+                                                 style={"fontWeight": "600", "fontSize": "0.85rem", "color": "#0f172a"}),
+                                        html.Div("สาขาวิชาสถิติและวิทยาการข้อมูล คณะวิทยาศาสตร์ มหาวิทยาลัยขอนแก่น",
+                                                 style={"fontSize": "0.78rem", "color": "#64748b"}),
+                                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px",
+                                               "padding": "10px 14px", "borderLeft": "3px solid #0ea5e9"}),
+                                ], md=6, className="mb-2"),
+                                dbc.Col([
+                                    html.Div([
+                                        html.Div("ดร.สร้างสรรค์ วรัคคกุล",
+                                                 style={"fontWeight": "600", "fontSize": "0.85rem", "color": "#0f172a"}),
+                                        html.Div("สาขาวิชาคณิตศาสตร์ คณะวิทยาศาสตร์ มหาวิทยาลัยขอนแก่น",
+                                                 style={"fontSize": "0.78rem", "color": "#64748b"}),
+                                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px",
+                                               "padding": "10px 14px", "borderLeft": "3px solid #0ea5e9"}),
+                                ], md=6, className="mb-2"),
+                                dbc.Col([
+                                    html.Div([
+                                        html.Div("ผศ.ภาคภูมิ บวบทอง",
+                                                 style={"fontWeight": "600", "fontSize": "0.85rem", "color": "#0f172a"}),
+                                        html.Div("คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏนครราชสีมา",
+                                                 style={"fontSize": "0.78rem", "color": "#64748b"}),
+                                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px",
+                                               "padding": "10px 14px", "borderLeft": "3px solid #0ea5e9"}),
+                                ], md=6, className="mb-2"),
+                                dbc.Col([
+                                    html.Div([
+                                        html.Div("อ. ดร.ณัฐวุฒิ หอมทอง",
+                                                 style={"fontWeight": "600", "fontSize": "0.85rem", "color": "#0f172a"}),
+                                        html.Div("หลักสูตรสาขาวิชาเทคโนโลยีธรณี คณะเทคโนโลยี มหาวิทยาลัยขอนแก่น",
+                                                 style={"fontSize": "0.78rem", "color": "#64748b"}),
+                                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px",
+                                               "padding": "10px 14px", "borderLeft": "3px solid #0ea5e9"}),
+                                ], md=6, className="mb-2"),
+                                dbc.Col([
+                                    html.Div([
+                                        html.Div("อ. ดร.ธนวรรณ ประฮาดไชย",
+                                                 style={"fontWeight": "600", "fontSize": "0.85rem", "color": "#0f172a"}),
+                                        html.Div("สาขาวิชาสถิติและวิทยาการข้อมูล มหาวิทยาลัยขอนแก่น",
+                                                 style={"fontSize": "0.78rem", "color": "#64748b"}),
+                                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px",
+                                               "padding": "10px 14px", "borderLeft": "3px solid #0ea5e9"}),
+                                ], md=6, className="mb-2"),
+                                dbc.Col([
+                                    html.Div([
+                                        html.Div("รศ. ดร.ธนพงศ์ อินทระ",
+                                                 style={"fontWeight": "600", "fontSize": "0.85rem", "color": "#0f172a"}),
+                                        html.Div("สาขาวิชาสถิติและวิทยาการข้อมูล มหาวิทยาลัยขอนแก่น",
+                                                 style={"fontSize": "0.78rem", "color": "#64748b"}),
+                                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px",
+                                               "padding": "10px 14px", "borderLeft": "3px solid #0ea5e9"}),
+                                ], md=6, className="mb-2"),
+                            ], className="g-2"),
+                        ]),
+                    ], className="d-flex align-items-start mb-4"),
+
+                    html.Hr(style={"borderColor": "#f1f5f9", "margin": "0 0 20px 0"}),
+
+                    # ขอบคุณอาจารย์ที่ปรึกษา
+                    html.Div([
+                        html.Span("👨‍🏫", style={"fontSize": "1.2rem", "marginRight": "10px", "flexShrink": "0"}),
+                        html.Div([
+                            html.Div("อาจารย์ที่ปรึกษาโครงงาน",
+                                     style={"fontWeight": "700", "fontSize": "0.9rem", "color": "#0f172a", "marginBottom": "8px"}),
+                            html.Div([
+                                html.Div("ดร.พิชญา วิรัชโชติเสถียร",
+                                         style={"fontWeight": "600", "fontSize": "0.88rem", "color": "#0ea5e9"}),
+                                html.Div("คณะผู้จัดทำขอขอบพระคุณ ดร.พิชญา วิรัชโชติเสถียร อาจารย์ที่ปรึกษาโครงงาน ที่ได้กรุณาให้คำแนะนำ ชี้แนะแนวทาง และสนับสนุนการดำเนินงานตลอดระยะเวลาของโครงงานนี้ด้วยความเอาใจใส่และเมตตาเป็นอย่างยิ่ง",
+                                         style={"fontSize": "0.82rem", "color": "#64748b", "lineHeight": "1.7", "marginTop": "4px"}),
+                            ], style={"backgroundColor": "#f0f9ff", "borderRadius": "8px",
+                                       "padding": "14px 16px", "borderLeft": "3px solid #0ea5e9"}),
+                        ]),
+                    ], className="d-flex align-items-start"),
+
+                ], style={**CARD_STYLE, "padding": "28px"}),
+            ], lg=12),
+        ]),
+
     ], style={"maxWidth": "1100px"}, className="py-5"),
 ], style=TAB_CONTENT_STYLE)
-
-
-# ===========================
-# 📄 TAB 2 — USER GUIDE: DASHBOARD
 # ===========================
 
 guide_home_tab = html.Div([
@@ -422,110 +541,348 @@ guide_home_tab = html.Div([
             ], lg=12)
         ], className="mb-4"),
 
-        # Overview + Default
+        # ภาพรวม
         dbc.Row([
             dbc.Col([
-                guide_section_card("🎛️", "ภาพรวมและค่า Default เริ่มต้น",
-                    "เมื่อเปิดหน้าครั้งแรก ระบบแสดงผล 9 จังหวัดทั้งหมด",
-                    html.Div([
-                        html.P("หน้า Dashboard แสดงผลการวิเคราะห์ความเบี่ยงเบนของตัวแปรสิ่งแวดล้อม 5 ตัวแปร ได้แก่ NDVI, LST, Soil Moisture, Rainfall และ Fire Count โดยใช้ค่า DTW Index เป็นตัวชี้วัดหลัก",
-                               style={"color": "#334155", "fontSize": "0.88rem", "marginBottom": "16px"}),
-                        info_box([
-                            html.Div("ค่าเริ่มต้น (ไม่เลือก Filter ใดๆ)", style={"fontWeight": "700", "marginBottom": "8px", "color": "#0369a1", "fontSize": "0.85rem"}),
+                html.Div([
+                    html.H5("ภาพรวมของหน้านี้", className="fw-bold mb-3",
+                            style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    html.P([
+                        "หน้านี้ตอบคำถามว่า ",
+                        html.Strong('"พื้นที่ไหนมีการเปลี่ยนแปลงสูง และเปลี่ยนแปลงในตัวแปรอะไร?"'),
+                    ], style={"color": "#334155", "fontSize": "0.9rem", "marginBottom": "16px"}),
+                    dbc.Row([
+                        dbc.Col([
                             html.Div([
-                                kv_row("ข้อมูล:", "ภาพรวม 9 จังหวัด (DTW_PROV_PATH)"),
-                                kv_row("ช่วงปี:", "ทั้งหมดที่มีในฐานข้อมูล"),
-                                kv_row("ระดับ:", "Province Level"),
-                            ])
-                        ]),
-                        html.Div(style={"height": "16px"}),
-                        html.Div("Filter ส่งผลต่อแหล่งข้อมูลของ Radar + Temporal Trend เท่านั้น", style={"fontWeight": "600", "fontSize": "0.82rem", "color": "#0f172a", "marginBottom": "8px"}),
-                        html.Div([
-                            flow_item("ไม่เลือก →", "DTW_PROV_PATH  (ภาพรวม 9 จังหวัด)"),
-                            flow_item("Province →", "DTW_PROV_PATH  filter เฉพาะจังหวัดที่เลือก"),
-                            flow_item("District →", "DTW_DIST_PATH  filter เฉพาะอำเภอที่เลือก"),
-                            flow_item("Sub →", "DTW_SUB_PATH   filter เฉพาะตำบลที่เลือก"),
-                        ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px", "padding": "12px 16px"}),
-                    ])
-                )
+                                html.Div("🌿", style={"fontSize": "1.4rem", "marginBottom": "6px"}),
+                                html.Div("5 ตัวแปร", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                                html.Div("NDVI, LST, Soil Moisture, Rainfall, Fire Count",
+                                         style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "2px"}),
+                            ], style={"backgroundColor": "#f0fdf4", "borderRadius": "10px", "padding": "14px", "textAlign": "center", "height": "100%"}),
+                        ], md=3, className="mb-2"),
+                        dbc.Col([
+                            html.Div([
+                                html.Div("📍", style={"fontSize": "1.4rem", "marginBottom": "6px"}),
+                                html.Div("9 จังหวัด", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                                html.Div("ขอนแก่น มหาสารคาม อุดรธานี นครราชสีมา ชัยภูมิ กาฬสินธุ์ บุรีรัมย์ หนองบัวลำภู เลย",
+                                         style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "2px"}),
+                            ], style={"backgroundColor": "#eff6ff", "borderRadius": "10px", "padding": "14px", "textAlign": "center", "height": "100%"}),
+                        ], md=3, className="mb-2"),
+                        dbc.Col([
+                            html.Div([
+                                html.Div("🏘️", style={"fontSize": "1.4rem", "marginBottom": "6px"}),
+                                html.Div("ระดับตำบล", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                                html.Div("เจาะลึกได้ถึงระดับ Province → District → Subdistrict",
+                                         style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "2px"}),
+                            ], style={"backgroundColor": "#fdf4ff", "borderRadius": "10px", "padding": "14px", "textAlign": "center", "height": "100%"}),
+                        ], md=3, className="mb-2"),
+                        dbc.Col([
+                            html.Div([
+                                html.Div("📅", style={"fontSize": "1.4rem", "marginBottom": "6px"}),
+                                html.Div("2015 – 2025", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                                html.Div("ข้อมูลรายปี เลือกช่วงเวลาได้อิสระผ่าน Slider",
+                                         style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "2px"}),
+                            ], style={"backgroundColor": "#fff7ed", "borderRadius": "10px", "padding": "14px", "textAlign": "center", "height": "100%"}),
+                        ], md=3, className="mb-2"),
+                    ], className="g-2"),
+                ], style={**CARD_STYLE, "padding": "24px"}),
             ], lg=12, className="mb-4"),
         ]),
 
-        # Charts row 1
+        # ภาพ Dashboard + คำอธิบาย Filter
         dbc.Row([
             dbc.Col([
-                guide_section_card("🕸️", "1. Environmental Deviation Radar",
-                    "เปรียบเทียบความเบี่ยงเบนทุกตัวแปรในภาพเดียว",
-                    html.Div([
-                        kv_row("ค่าที่แสดง:", "Median DTW Index ของแต่ละตัวแปร (จากทุก row ในขอบเขตที่เลือก)"),
-                        kv_row("เหตุผลที่ใช้ Median:", "DTW Index มี outlier รุนแรง Median ทนทานกว่า Mean และสอดคล้องกับ Modified Z-Score (Median-based)"),
-                        kv_row("เส้นอ้างอิง 3.5:", "มาจาก Iglewicz & Hoaglin (1993) — ไม่ใช่ hard threshold"),
-                        html.Div(style={"height": "8px"}),
-                        warning_box("Median สะท้อนพฤติกรรมทั่วไปตลอดช่วงเวลา ถ้าต้องการเห็นความรุนแรงรายปีควรดู Temporal Trend ประกอบ"),
-                    ])
-                )
-            ], lg=6, className="mb-4"),
-            dbc.Col([
-                guide_section_card("📈", "2. Temporal Deviation Trends",
-                    "แนวโน้มความเบี่ยงเบนรายปีของแต่ละตัวแปร",
-                    html.Div([
-                        kv_row("ค่าที่แสดง:", "Median DTW Index group by ปี → Median ข้ามทุกพื้นที่ในขอบเขต"),
-                        kv_row("เหตุผลที่ใช้ Median:", "Mean อาจถูกดึงขึ้นโดยจังหวัดที่ผิดปกติ Median สะท้อน 'จังหวัดทั่วไป' ได้แม่นยำกว่า"),
-                        kv_row("พื้นหลัง:", "เขียวจาง = โซนปกติ (0–3.5) / แดงจาง = โซนที่ควรสังเกต (>3.5)"),
-                        kv_row("เส้นประแดง:", "Reference 3.5 (Modified Z-Score)"),
-                        html.Div(style={"height": "8px"}),
-                        warning_box("เส้น 3.5 เป็นค่าอ้างอิง ไม่ใช่เกณฑ์ตายตัว ควรพิจารณาร่วมกับบริบทของพื้นที่"),
-                    ])
-                )
-            ], lg=6, className="mb-4"),
+                html.Div([
+                    html.Img(
+                        src="/dash/assets/images/dashboard.jpg",
+                        style={"width": "100%", "borderRadius": "12px",
+                               "boxShadow": "0 4px 16px rgba(0,0,0,0.10)", "display": "block"}
+                    ),
+                    html.P("ภาพรวมหน้า Dashboard พร้อมหมายเลขอ้างอิงแต่ละส่วน",
+                           style={"fontSize": "0.78rem", "color": "#94a3b8", "textAlign": "center", "marginTop": "8px", "marginBottom": "0"}),
+                ], style={"marginBottom": "8px"}),
+            ], lg=12, className="mb-4"),
         ]),
 
-        # Charts row 2
+        # Filter Section
         dbc.Row([
             dbc.Col([
-                guide_section_card("🌱", "3. Biophysical Parameter Trends (Observed)",
-                    "ค่าจริงจากดาวเทียม (Raw Data) แสดงแนวโน้มรายปีแบบ Normalized",
+                html.Div([
                     html.Div([
-                        kv_row("แหล่งข้อมูล:", "RAW_DATA_PATH — ระดับตำบลเสมอเมื่อมีการเลือก Filter"),
-                        kv_row("ค่าที่แสดง:", "Mean ของทุกพื้นที่ group by ปี → Normalize เป็น 0–1 ด้วย Min-Max"),
-                        kv_row("แกน Y:", "0 = ต่ำสุดในช่วงที่เลือก, 1 = สูงสุดในช่วงที่เลือก"),
-                        kv_row("Hover:", "แสดงทั้งค่า Normalized และค่าจริง (Real Value)"),
-                        html.Div(style={"height": "8px"}),
-                        warning_box("Normalize แยกต่างหากต่อตัวแปร ค่า 1.0 ของ NDVI ≠ ค่า 1.0 ของ LST ใช้ดูทิศทางแนวโน้มเท่านั้น"),
-                    ])
-                )
-            ], lg=6, className="mb-4"),
+                        html.Span("1", style={
+                            "backgroundColor": "#0ea5e9", "color": "white",
+                            "borderRadius": "50%", "width": "28px", "height": "28px",
+                            "display": "inline-flex", "alignItems": "center", "justifyContent": "center",
+                            "fontWeight": "700", "fontSize": "0.85rem", "marginRight": "10px", "flexShrink": "0"
+                        }),
+                        html.H5("Filter", className="mb-0 fw-bold",
+                                style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Div([
+                                html.Div([
+                                    html.Span("📊", style={"fontSize": "1.1rem", "marginRight": "8px"}),
+                                    html.Span("Variable", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem"}),
+                                ], className="d-flex align-items-center mb-2"),
+                                html.P("เลือกได้หลายตัวพร้อมกันจะให้แสดงตัวแปรไหนบ้างในกราฟ กราฟทั้ง 3 และตารางจะแสดงเฉพาะตัวแปรที่เลือกทันที",
+                                       style={"fontSize": "0.82rem", "color": "#64748b", "lineHeight": "1.7", "marginBottom": "0"}),
+                            ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "14px", "height": "100%"}),
+                        ], md=4, className="mb-2"),
+                        dbc.Col([
+                            html.Div([
+                                html.Div([
+                                    html.Span("📍", style={"fontSize": "1.1rem", "marginRight": "8px"}),
+                                    html.Span("Province / District / Subdistrict", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem"}),
+                                ], className="d-flex align-items-center mb-2"),
+                                html.P("เลือกได้ทีละ 1 เชื่อมต่อกันเป็นลำดับ พอเลือก Province แล้ว District จะแสดงเฉพาะอำเภอในจังหวัดนั้น ถ้าไม่เลือกอะไรเลยระบบจะแสดงภาพรวมทั้งภูมิภาค",
+                                       style={"fontSize": "0.82rem", "color": "#64748b", "lineHeight": "1.7", "marginBottom": "0"}),
+                            ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "14px", "height": "100%"}),
+                        ], md=4, className="mb-2"),
+                        dbc.Col([
+                            html.Div([
+                                html.Div([
+                                    html.Span("📅", style={"fontSize": "1.1rem", "marginRight": "8px"}),
+                                    html.Span("Time Period Slider", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem"}),
+                                ], className="d-flex align-items-center mb-2"),
+                                html.P("เลือกช่วงปี 2015–2025 โดยลากได้ทั้งจุดเริ่มต้นและจุดสิ้นสุด เพื่อเปรียบเทียบว่าช่วงเวลาไหนมีการเปลี่ยนแปลงแตกต่างกัน",
+                                       style={"fontSize": "0.82rem", "color": "#64748b", "lineHeight": "1.7", "marginBottom": "0"}),
+                            ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "14px", "height": "100%"}),
+                        ], md=4, className="mb-2"),
+                    ], className="g-2"),
+                ], style={**CARD_STYLE, "padding": "24px"}),
+            ], lg=12, className="mb-5"),
+        ]),
+
+        section_divider(),
+
+        # ตัวอย่างการใช้งาน Header
+        dbc.Row([
             dbc.Col([
-                guide_section_card("🏆", "4. Top 10 Areas of Significant Trend Deviation",
-                    "จัดอันดับพื้นที่ที่มีความเบี่ยงเบนรุนแรงสุดในแต่ละตัวแปร",
+                section_label("ตัวอย่างการใช้งาน", "🔍"),
+                html.H4("สมมติสนใจจังหวัดขอนแก่น ทั้ง 5 ตัวแปร ช่วงปี 2015–2025",
+                        style={**SECTION_HEADER_STYLE, "fontSize": "1.15rem"}, className="mb-1"),
+                html.P("ลำดับการอ่านกราฟจากบนลงล่าง เพื่อเล่าเรื่องตั้งแต่ภาพรวม → เวลา → ค่าจริง → พื้นที่",
+                       style={"color": "#64748b", "fontSize": "0.88rem"}),
+            ], lg=12)
+        ], className="mb-4"),
+
+        # กราฟ 2 — Radar
+        dbc.Row([
+            dbc.Col([
+                html.Div([
                     html.Div([
-                        kv_row("แหล่งข้อมูล:", "DTW_SUB_PATH (ระดับตำบลเสมอ) filter ตาม scope"),
-                        html.Div("Logic การจัดอันดับ:", style={"fontSize": "0.82rem", "fontWeight": "600", "color": "#0f172a", "marginBottom": "6px"}),
+                        html.Span("2", style={
+                            "backgroundColor": "#0ea5e9", "color": "white", "borderRadius": "50%",
+                            "width": "28px", "height": "28px", "display": "inline-flex",
+                            "alignItems": "center", "justifyContent": "center",
+                            "fontWeight": "700", "fontSize": "0.85rem", "marginRight": "10px", "flexShrink": "0"
+                        }),
+                        html.H5("Environmental Deviation Radar", className="mb-0 fw-bold",
+                                style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    html.P([
+                        "กราฟนี้แสดงค่า DTW เฉลี่ยของทั้ง 5 ตัวแปรพร้อมกัน ทำให้เห็นได้ทันทีว่าตัวแปรไหนมีการเปลี่ยนแปลงสูงที่สุดในพื้นที่ที่เลือก "
+                        "โดยยิ่ง polygon สีน้ำเงินยื่นออกไปในทิศทางของตัวแปรใดมาก แสดงว่าตัวแปรนั้นมีการเปลี่ยนแปลงสูง "
+                        "และถ้ายื่นเลยเส้นประที่ 3.5 แสดงว่ามีการเปลี่ยนแปลงสูงผิดปกติ"
+                    ], style={"color": "#334155", "fontSize": "0.88rem", "lineHeight": "1.8", "marginBottom": "10px"}),
+                    info_box([
+                        html.Span("💡 ", style={"fontSize": "0.9rem"}),
+                        html.Span("จากภาพจะเห็นว่า Fire Spots ยื่นออกมามากที่สุด แม้จะยังไม่เกิน 3.5 แต่ก็บ่งบอกว่าในขอนแก่นช่วง 10 ปีที่ผ่านมา รูปแบบของจุดความร้อนมีการเปลี่ยนแปลงมากกว่าตัวแปรอื่น จึงควรติดตามต่อในกราฟถัดไป",
+                                  style={"fontSize": "0.85rem", "color": "#0369a1"}),
+                    ]),
+                ], style={**CARD_STYLE, "padding": "24px", "borderLeft": "4px solid #0ea5e9"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+        # กราฟ 3 — Temporal Deviation Trends
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                        html.Span("3", style={
+                            "backgroundColor": "#8b5cf6", "color": "white", "borderRadius": "50%",
+                            "width": "28px", "height": "28px", "display": "inline-flex",
+                            "alignItems": "center", "justifyContent": "center",
+                            "fontWeight": "700", "fontSize": "0.85rem", "marginRight": "10px", "flexShrink": "0"
+                        }),
+                        html.H5("Temporal Deviation Trends", className="mb-0 fw-bold",
+                                style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    html.P([
+                        "เมื่อทราบแล้วว่าตัวแปรไหนน่าสนใจ กราฟนี้จะบอกว่า ",
+                        html.Strong("การเปลี่ยนแปลงนั้นเกิดขึ้นในปีไหน "),
+                        "โดยมีเส้นประสีแดงที่ค่า 3.5 เป็นเกณฑ์อ้างอิง หากเส้นของตัวแปรใดพุ่งเกินเส้นนี้ในปีใด แสดงว่าปีนั้นมีการเปลี่ยนแปลงสูงผิดปกติ",
+                    ], style={"color": "#334155", "fontSize": "0.88rem", "lineHeight": "1.8", "marginBottom": "10px"}),
+                    info_box([
+                        html.Span("💡 ", style={"fontSize": "0.9rem"}),
+                        html.Span("จากภาพจะเห็นว่า Fire Spots พุ่งเกิน 3.5 ในปี 2018 และ 2024 แสดงว่าทั้งสองปีนั้นรูปแบบของจุดความร้อนในขอนแก่นเปลี่ยนไปจากปกติมากที่สุดในรอบ 10 ปี และควรนำสองปีนี้ไปเจาะลึกต่อใน Map Explorer",
+                                  style={"fontSize": "0.85rem", "color": "#0369a1"}),
+                    ]),
+                ], style={**CARD_STYLE, "padding": "24px", "borderLeft": "4px solid #8b5cf6"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+        # กราฟ 4 — Biophysical
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                        html.Span("4", style={
+                            "backgroundColor": "#10b981", "color": "white", "borderRadius": "50%",
+                            "width": "28px", "height": "28px", "display": "inline-flex",
+                            "alignItems": "center", "justifyContent": "center",
+                            "fontWeight": "700", "fontSize": "0.85rem", "marginRight": "10px", "flexShrink": "0"
+                        }),
+                        html.H5("Biophysical Parameter Trends (Observed)", className="mb-0 fw-bold",
+                                style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    html.P([
+                        "เมื่อรู้แล้วว่าตัวแปรไหนและปีไหน กราฟนี้จะบอกว่า ",
+                        html.Strong("ค่าจริงเปลี่ยนไปในทิศทางใด "),
+                        "กราฟนี้แสดงค่าจริงจากดาวเทียมแบบ Normalized เพื่อให้เปรียบเทียบทั้ง 5 ตัวแปรในกราฟเดียวกันได้",
+                    ], style={"color": "#334155", "fontSize": "0.88rem", "lineHeight": "1.8", "marginBottom": "10px"}),
+                    info_box([
+                        html.Span("💡 ", style={"fontSize": "0.9rem"}),
+                        html.Span("จากภาพจะเห็นว่าในปีที่ Fire Spots สูงขึ้น ค่า NDVI มีแนวโน้มลดลงในช่วงเดียวกัน สะท้อนให้เห็นว่าการเผาไหม้ที่เพิ่มขึ้นอาจส่งผลต่อความสมบูรณ์ของพืชพรรณในพื้นที่",
+                                  style={"fontSize": "0.85rem", "color": "#0369a1"}),
+                    ]),
+                    html.Div(style={"height": "10px"}),
+                    warning_box("Normalize แยกต่างหากต่อตัวแปร ค่า 1.0 ของ NDVI ≠ ค่า 1.0 ของ LST ใช้ดูทิศทางแนวโน้มเท่านั้น"),
+                ], style={**CARD_STYLE, "padding": "24px", "borderLeft": "4px solid #10b981"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+        # ตาราง 5 — Top 10
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                        html.Span("5", style={
+                            "backgroundColor": "#f59e0b", "color": "white", "borderRadius": "50%",
+                            "width": "28px", "height": "28px", "display": "inline-flex",
+                            "alignItems": "center", "justifyContent": "center",
+                            "fontWeight": "700", "fontSize": "0.85rem", "marginRight": "10px", "flexShrink": "0"
+                        }),
+                        html.H5("Top 10 Areas of Significant Trend Deviation", className="mb-0 fw-bold",
+                                style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    html.P(
+                        "ตารางนี้แสดงตำบลที่มีการเปลี่ยนแปลงของแต่ละตัวแปรสูงสุด เรียงตามค่า DTW เฉลี่ยตลอดช่วงเวลา",
+                        style={"color": "#334155", "fontSize": "0.88rem", "lineHeight": "1.8", "marginBottom": "10px"}
+                    ),
+                    info_box([
+                        html.Span("💡 ", style={"fontSize": "0.9rem"}),
+                        html.Span("จากภาพจะเห็นว่า Fire Spots ของ Pueai Noi, Kham Pom มีค่า DTW สูงถึง 156.55 ซึ่งสูงกว่าอันดับอื่นมากพอสมควร บ่งบอกว่าตำบลนี้มีรูปแบบการเผาไหม้ที่เปลี่ยนแปลงผิดปกติมากที่สุดในจังหวัด และควรได้รับการติดตามเป็นพิเศษ",
+                                  style={"fontSize": "0.85rem", "color": "#0369a1"}),
+                    ]),
+                ], style={**CARD_STYLE, "padding": "24px", "borderLeft": "4px solid #f59e0b"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+        # ตาราง 6 — Current Rankings
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                        html.Span("6", style={
+                            "backgroundColor": "#ef4444", "color": "white", "borderRadius": "50%",
+                            "width": "28px", "height": "28px", "display": "inline-flex",
+                            "alignItems": "center", "justifyContent": "center",
+                            "fontWeight": "700", "fontSize": "0.85rem", "marginRight": "10px", "flexShrink": "0"
+                        }),
+                        html.H5("Current Rankings (Min / Max Values)", className="mb-0 fw-bold",
+                                style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    html.P([
+                        "ต่างจาก Top 10 ตรงที่ตารางนี้แสดง ",
+                        html.Strong("ค่าจริงจากดาวเทียม"),
+                        " ไม่ใช่ค่าการเปลี่ยนแปลง โดยแบ่งเป็น Highest และ Lowest ในแต่ละตัวแปร ทำให้เปรียบเทียบได้ทันทีว่าตำบลไหนมีค่าสูงหรือต่ำที่สุดในจังหวัด",
+                    ], style={"color": "#334155", "fontSize": "0.88rem", "lineHeight": "1.8", "marginBottom": "10px"}),
+                    info_box([
+                        html.Span("💡 ", style={"fontSize": "0.9rem"}),
+                        html.Span("จากภาพจะเห็นว่า NDVI Highest อยู่ที่ 0.72 โดย Wiang Kao, Nai Mueang มีความสมบูรณ์ของพืชพรรณสูงสุด ส่วน LST Highest อยู่ที่ 34.21°C โดย Nong Song Hong, Don Du มีอุณหภูมิพื้นผิวสูงสุด "
+                                  "เมื่อนำมาเทียบกับ Top 10 จะเห็นว่าพื้นที่ที่มีการเปลี่ยนแปลงสูงไม่ได้อยู่ในกลุ่มที่มีค่าสูงสุดหรือต่ำสุดเสมอไป แสดงให้เห็นว่าการเปลี่ยนแปลงไม่ได้ขึ้นอยู่กับขนาดของค่าเพียงอย่างเดียว แต่ขึ้นอยู่กับรูปแบบที่เปลี่ยนไปจากเดิม",
+                                  style={"fontSize": "0.85rem", "color": "#0369a1"}),
+                    ]),
+                ], style={**CARD_STYLE, "padding": "24px", "borderLeft": "4px solid #ef4444"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+        section_divider(),
+
+        # สรุป
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.H5("ตัวอย่างการสรุปผล",
+                            className="fw-bold mb-3",
+                            style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    html.Div([
                         html.Div([
-                            flow_item("1.", "ระบุปีล่าสุดในช่วงที่เลือก"),
-                            flow_item("2.", "ดึงค่า DTW ของปีล่าสุดรายตำบล (ไม่ใช่ค่าเฉลี่ย)"),
-                            flow_item("3.", "คำนวณ Freq = จำนวนครั้งที่ DTW > 3.5 ตลอดช่วงเวลา"),
-                            flow_item("4.", "Sort จากค่า DTW ปีล่าสุดมากไปน้อย"),
-                        ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px", "padding": "10px 14px", "marginBottom": "12px"}),
-                        kv_row("Freq สีแดง:", "≥ 3 ครั้ง (ผิดปกติซ้ำซาก)"),
-                        kv_row("Freq สีเทา:", "< 3 ครั้ง"),
-                    ])
-                )
-            ], lg=6, className="mb-4"),
+                            html.Span("🔥 Fire Count — ", style={"fontWeight": "700", "color": "#ef4444", "fontSize": "0.88rem"}),
+                            html.Span("Pueai Noi, Kham Pom และ Mueang Khon Kaen, Ban Wa มีค่า DTW สูงสุดในจังหวัด บ่งบอกว่ารูปแบบการเผาไหม้ในพื้นที่เหล่านี้เปลี่ยนแปลงไปจากเดิมมากที่สุด และยังพุ่งเกินเกณฑ์ 3.5 ในปี 2018 และ 2024 อีกด้วย",
+                                      style={"fontSize": "0.85rem", "color": "#334155"}),
+                        ], className="mb-2"),
+                        html.Div([
+                            html.Span("🌡️ LST — ", style={"fontWeight": "700", "color": "#ef4444", "fontSize": "0.88rem"}),
+                            html.Span("Waeng Noi, Tha Nang Naeo มีค่า DTW สูงสุดด้าน LST ที่ 2.69 แสดงว่าอุณหภูมิพื้นผิวในพื้นที่นี้มีรูปแบบที่เปลี่ยนแปลงสูงกว่าตำบลอื่นในจังหวัด",
+                                      style={"fontSize": "0.85rem", "color": "#334155"}),
+                        ], className="mb-2"),
+                        html.Div([
+                            html.Span("💧 Soil Moisture — ", style={"fontWeight": "700", "color": "#3b82f6", "fontSize": "0.88rem"}),
+                            html.Span("Wiang Kao, Mueang Kao Phatthana มีค่า DTW สูงสุดด้านความชื้นในดินที่ 2.75 ซึ่งเมื่อพิจารณาร่วมกับ Fire Spots ที่สูงในบริเวณใกล้เคียง อาจสะท้อนถึงความสัมพันธ์ระหว่างความแห้งแล้งและการเผาไหม้ที่ควรติดตามต่อ",
+                                      style={"fontSize": "0.85rem", "color": "#334155"}),
+                        ], className="mb-3"),
+                        html.P("หากต้องการวิเคราะห์เชิงพื้นที่เพิ่มเติม สามารถนำชื่อตำบลเหล่านี้ไปกรองใน Map Explorer เพื่อดูการกระจายตัวบนแผนที่และแนวโน้มรายปีได้ทันที",
+                               style={"fontSize": "0.85rem", "color": "#64748b", "marginBottom": "0"}),
+                    ]),
+                ], style={**CARD_STYLE, "padding": "24px", "backgroundColor": "#f0f9ff", "border": "1px solid #bae6fd"}),
+            ], lg=12, className="mb-4"),
         ]),
 
-        # Table row
+        section_divider(),
+
+        # สรุปการใช้งาน
         dbc.Row([
             dbc.Col([
-                guide_section_card("📋", "5. Current Rankings (Min / Max Values)",
-                    "จัดอันดับพื้นที่ที่มีค่าตัวแปรจริง (Raw Data) สูงสุดและต่ำสุด",
+                html.Div([
+                    html.H5("สรุปการใช้งานหน้านี้ตามลำดับ",
+                            className="fw-bold mb-3",
+                            style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
                     html.Div([
-                        kv_row("แหล่งข้อมูล:", "RAW_DATA_PATH ระดับตำบล"),
-                        kv_row("Logic:", "Group by ตำบล → Mean ตลอดช่วงเวลาที่เลือก → Sort แสดง Top 10 สูงสุด/ต่ำสุด แยก Tab"),
-                        html.Div(style={"height": "8px"}),
-                        warning_box("ค่าที่แสดงเป็นค่าเฉลี่ยตลอดช่วงเวลา ไม่ใช่ค่าของปีใดปีหนึ่ง การเลือกช่วงปีที่ต่างกันจะส่งผลต่ออันดับ"),
-                    ])
-                )
+                        html.Div([
+                            html.Span("1.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู Radar", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ รู้ว่าตัวแปรไหนมีการเปลี่ยนแปลงสูง", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("2.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู DTW Line", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ รู้ว่ามีการเปลี่ยนแปลงสูงช่วงปีไหน", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("3.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู Raw Line", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ รู้ว่าค่าจริงเปลี่ยนไปในทิศทางที่ดีขึ้นหรือแย่ลง", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("4.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู Top 10", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ รู้ว่าพื้นที่ไหนมีการเปลี่ยนแปลงสูงสุด", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("5.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู Rankings", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ เปรียบเทียบค่าจริงระหว่างพื้นที่", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("6.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("เอาชื่อพื้นที่ไปกรองใน Filter", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ เจาะลึกต่อใน Map Explorer", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-0 d-flex align-items-start"),
+                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "16px"}),
+                ], style={**CARD_STYLE, "padding": "24px"}),
             ], lg=12, className="mb-4"),
         ]),
 
@@ -550,163 +907,381 @@ guide_map_tab = html.Div([
             ], lg=12)
         ], className="mb-4"),
 
-        # Default + Slider
+        # ภาพรวม
         dbc.Row([
             dbc.Col([
-                guide_section_card("🎛️", "ค่า Default และ Slider",
-                    "พฤติกรรมเริ่มต้นและการเปลี่ยนช่วงเวลา",
-                    html.Div([
-                        info_box([
-                            html.Div("ค่าเริ่มต้น", style={"fontWeight": "700", "marginBottom": "8px", "color": "#0369a1", "fontSize": "0.85rem"}),
-                            kv_row("Variable:", "Vegetation (NDVI)"),
-                            kv_row("Scope:", "All Provinces (9 จังหวัด)"),
-                            kv_row("Mode:", "Raw Data"),
-                            kv_row("Period:", "ทั้งหมดตั้งแต่ต้นจนปัจจุบัน"),
-                        ]),
-                        html.Div(style={"height": "16px"}),
-                        html.Div("พฤติกรรม Slider ตาม Mode:", style={"fontWeight": "600", "fontSize": "0.82rem", "color": "#0f172a", "marginBottom": "8px"}),
-                        html.Div([
-                            flow_item("Raw / Heatmap →", "Slider รายเดือน  |  แสดง: 'Jan 2015 – Aug 2025'"),
-                            flow_item("Deviation (DTW) →", "Slider รายปี  |  แสดง: 'Year: 2015 – 2025'"),
-                        ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px", "padding": "12px 16px"}),
-                    ])
-                )
-            ], lg=6, className="mb-4"),
-            dbc.Col([
-                guide_section_card("🔍", "Scope & Level Logic",
-                    "ระดับข้อมูลและ Auto Zoom ของแผนที่",
-                    html.Div([
-                        html.Div("การเลือก Filter กำหนดระดับข้อมูลบนแผนที่:", style={"fontWeight": "600", "fontSize": "0.82rem", "color": "#0f172a", "marginBottom": "8px"}),
-                        html.Div([
-                            flow_item("ไม่เลือก →", "Province Level  (แสดงรายจังหวัด)"),
-                            flow_item("Province →", "Subdistrict Level  (รายตำบลในจังหวัด)"),
-                            flow_item("District →", "Subdistrict Level  (รายตำบลในอำเภอ)"),
-                            flow_item("Sub →", "Subdistrict Level  (รายตำบลที่เลือก)"),
-                        ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px", "padding": "12px 16px", "marginBottom": "12px"}),
-                        kv_row("Auto Zoom:", "คำนวณจากค่าเบี่ยงเบนของพิกัดศูนย์กลางของพื้นที่ในขอบเขต → ซูมอัตโนมัติตาม scope"),
-                    ])
-                )
-            ], lg=6, className="mb-4"),
+                html.Div([
+                    html.H5("ภาพรวมของหน้านี้", className="fw-bold mb-3",
+                            style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
+                    html.P([
+                        "หน้านี้ตอบคำถามว่า ",
+                        html.Strong('"การเปลี่ยนแปลงนั้นกระจายตัวอยู่ที่ไหนบ้างบนแผนที่?"'),
+                    ], style={"color": "#334155", "fontSize": "0.9rem", "marginBottom": "16px"}),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Div([
+                                html.Div("◀", style={"fontSize": "1.2rem", "marginBottom": "6px", "color": "#0ea5e9"}),
+                                html.Div("Sidebar (ซ้าย)", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                                html.Div("ควบคุม Filter และแสดงสถิติ Stats Cards, Temporal Trend, Top Areas",
+                                         style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "2px"}),
+                            ], style={"backgroundColor": "#eff6ff", "borderRadius": "10px", "padding": "14px", "textAlign": "center", "height": "100%"}),
+                        ], md=6, className="mb-2"),
+                        dbc.Col([
+                            html.Div([
+                                html.Div("🗺️", style={"fontSize": "1.2rem", "marginBottom": "6px"}),
+                                html.Div("แผนที่ (ขวา)", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                                html.Div("Choropleth Map แบบ interactive เลือกโหมดได้ 3 แบบ: Raw Data, Deviation, Heatmap",
+                                         style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "2px"}),
+                            ], style={"backgroundColor": "#f0fdf4", "borderRadius": "10px", "padding": "14px", "textAlign": "center", "height": "100%"}),
+                        ], md=6, className="mb-2"),
+                    ], className="g-2"),
+                ], style={**CARD_STYLE, "padding": "24px"}),
+            ], lg=12, className="mb-4"),
         ]),
 
-        # 3 Map Modes
+        section_divider(),
+
+        # Filter
         dbc.Row([
             dbc.Col([
-                section_label("Map Modes", "🗺️"),
-                html.H5("3 โหมดของแผนที่หลัก (Choropleth Map)", style={**SECTION_HEADER_STYLE, "fontSize": "1.1rem"}, className="mb-3"),
+                section_label("Filter", "🎛️"),
+                html.H4("การตั้งค่า Filter", style={**SECTION_HEADER_STYLE, "fontSize": "1.15rem"}, className="mb-1"),
+                html.P("Filter อยู่ใน Sidebar ด้านซ้าย มีการทำงานคล้ายกับหน้า Dashboard แต่มีความยืดหยุ่นกว่า",
+                       style={"color": "#64748b", "fontSize": "0.88rem"}),
+            ], lg=12)
+        ], className="mb-3"),
+
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div("📊", style={"fontSize": "1.6rem", "marginBottom": "8px"}),
+                    html.Div("Variable", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                    html.Div("เลือกได้ทีละ 1 ตัว",
+                             style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "4px"}),
+                    html.Div("แผนที่ + Stats + Trend + Ranking อัปเดตทันที",
+                             style={"fontSize": "0.78rem", "color": "#64748b"}),
+                ], style={"backgroundColor": "#f0fdf4", "borderRadius": "10px", "padding": "16px", "textAlign": "center", "height": "100%"}),
+            ], md=4, className="mb-3"),
+            dbc.Col([
+                html.Div([
+                    html.Div("📍", style={"fontSize": "1.6rem", "marginBottom": "8px"}),
+                    html.Div("Province / District / Sub", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                    html.Div("เลือกได้หลายค่าพร้อมกัน",
+                             style={"fontSize": "0.78rem", "color": "#64748b", "marginTop": "4px"}),
+                    html.Div("แผนที่ zoom + แสดงระดับตำบลอัตโนมัติ",
+                             style={"fontSize": "0.78rem", "color": "#64748b"}),
+                ], style={"backgroundColor": "#eff6ff", "borderRadius": "10px", "padding": "16px", "textAlign": "center", "height": "100%"}),
+            ], md=4, className="mb-3"),
+            dbc.Col([
+                html.Div([
+                    html.Div("📅", style={"fontSize": "1.6rem", "marginBottom": "8px"}),
+                    html.Div("Time Period Slider", style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a"}),
+                    html.Div([
+                        html.Span("Raw / Heatmap", style={"fontWeight": "600", "color": "#0ea5e9"}),
+                        html.Span(" → รายเดือน", style={"fontSize": "0.78rem", "color": "#64748b"}),
+                    ], style={"marginTop": "4px"}),
+                    html.Div([
+                        html.Span("Deviation", style={"fontWeight": "600", "color": "#ef4444"}),
+                        html.Span(" → รายปี", style={"fontSize": "0.78rem", "color": "#64748b"}),
+                    ]),
+                ], style={"backgroundColor": "#fff7ed", "borderRadius": "10px", "padding": "16px", "textAlign": "center", "height": "100%"}),
+            ], md=4, className="mb-3"),
+        ], className="mb-5"),
+
+        section_divider(),
+
+        # ตัวอย่าง
+        dbc.Row([
+            dbc.Col([
+                section_label("ตัวอย่างการใช้งาน", "🔍"),
+                html.H4("ต่อเนื่องจากหน้า Dashboard — เจาะลึก LST ใน Waeng Noi, Khon Kaen",
+                        style={**SECTION_HEADER_STYLE, "fontSize": "1.15rem"}, className="mb-1"),
+                html.P("จากหน้า Dashboard พบว่า Waeng Noi, Tha Nang Naeo มีค่า DTW สูงสุดด้าน LST ที่ 2.69 จึงนำมาเจาะลึกต่อโดยเลือก Variable = LST, Province = Khon Kaen, District = Waeng Noi",
+                       style={"color": "#64748b", "fontSize": "0.88rem"}),
+            ], lg=12)
+        ], className="mb-4"),
+
+        # Raw Data Mode
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                        html.Span("🌍", style={"fontSize": "1.3rem", "marginRight": "10px"}),
+                        html.Span("Raw Data Mode", style={"fontFamily": "'Prompt', sans-serif", "fontWeight": "700", "fontSize": "1rem", "color": "#0f172a"}),
+                        html.Span(" — ดูค่าจริงรายตำบล", style={"fontSize": "0.85rem", "color": "#64748b", "marginLeft": "6px"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Img(src="/dash/assets/images/mapraw.jpg",
+                                     style={"width": "100%", "borderRadius": "10px",
+                                            "boxShadow": "0 2px 8px rgba(0,0,0,0.08)"}),
+                        ], md=7),
+                        dbc.Col([
+                            html.Div([
+                                html.Div([
+                                    html.Span("7–8", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("เลือก LST, Khon Kaen, Waeng Noi Slider รายเดือน", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("9", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Div([
+                                        html.Div("ค่าเฉลี่ย 33.27°C", style={"fontSize": "0.82rem", "fontWeight": "600", "color": "#0f172a"}),
+                                        html.Div("สูงสุด: Thang Khwang 33.61°C", style={"fontSize": "0.8rem", "color": "#64748b"}),
+                                        html.Div("ต่ำสุด: Lahan Na 32.99°C", style={"fontSize": "0.8rem", "color": "#64748b"}),
+                                    ]),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("10", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("Temporal Trend แสดงแนวโน้มอุณหภูมิลดลงในระยะยาว", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("11", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("Top Ranking ต่างกันน้อยมาก แสดงว่าทุกตำบลมีอุณหภูมิใกล้เคียงกัน", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("12", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("แผนที่สีส้มแดงสม่ำเสมอทั้งอำเภอ", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-0 d-flex align-items-start"),
+                            ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "16px", "height": "100%"}),
+                        ], md=5),
+                    ], className="g-3"),
+                ], style={**CARD_STYLE, "padding": "24px", "borderTop": "3px solid #0ea5e9"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+        # Deviation Mode
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                        html.Span("⚡", style={"fontSize": "1.3rem", "marginRight": "10px"}),
+                        html.Span("Deviation Mode", style={"fontFamily": "'Prompt', sans-serif", "fontWeight": "700", "fontSize": "1rem", "color": "#0f172a"}),
+                        html.Span(" — ดูระดับการเบี่ยงเบนจาก baseline", style={"fontSize": "0.85rem", "color": "#64748b", "marginLeft": "6px"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Img(src="/dash/assets/images/mapdtw.jpg",
+                                     style={"width": "100%", "borderRadius": "10px",
+                                            "boxShadow": "0 2px 8px rgba(0,0,0,0.08)"}),
+                        ], md=7),
+                        dbc.Col([
+                            html.Div([
+                                html.Div([
+                                    html.Span("13–14", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("ตั้งค่าเหมือนเดิม เปลี่ยน Mode เป็น Deviation Slider รายปี", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("15", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Div([
+                                        html.Div("ค่าเฉลี่ย DTW = 1.38", style={"fontSize": "0.82rem", "fontWeight": "600", "color": "#0f172a"}),
+                                        html.Div("สูงสุด: Tha Nang Naeo 2.69", style={"fontSize": "0.8rem", "color": "#64748b"}),
+                                        html.Div("ต่ำสุด: Thang Khwang 0.70", style={"fontSize": "0.8rem", "color": "#64748b"}),
+                                    ]),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("16", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Div([
+                                        html.Div("DTW ต่ำตลอด แต่พุ่งขึ้นปี 2025", style={"fontSize": "0.82rem", "fontWeight": "600", "color": "#0f172a"}),
+                                        html.Div("เทียบกับ (10) → DTW สูงเพราะอุณหภูมิลดลงเรื่อยๆ ไม่ใช่สูงขึ้น → การเปลี่ยนแปลงในทิศทางที่ดี", style={"fontSize": "0.8rem", "color": "#64748b", "lineHeight": "1.6"}),
+                                    ]),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("17", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("Tha Nang Naeo 2.69 > Waeng Noi 1.68 > Tha Wat 1.23", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("18", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("แผนที่สีครีมอ่อน → DTW ยังอยู่ในระดับต่ำโดยรวม", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-0 d-flex align-items-start"),
+                            ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "16px", "height": "100%"}),
+                        ], md=5),
+                    ], className="g-3"),
+                ], style={**CARD_STYLE, "padding": "24px", "borderTop": "3px solid #ef4444"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+        # Heatmap Mode
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                        html.Span("🔥", style={"fontSize": "1.3rem", "marginRight": "10px"}),
+                        html.Span("Heatmap Mode", style={"fontFamily": "'Prompt', sans-serif", "fontWeight": "700", "fontSize": "1rem", "color": "#0f172a"}),
+                        html.Span(" — ดูภาพรวมทุกตำบลในทุกช่วงเวลา", style={"fontSize": "0.85rem", "color": "#64748b", "marginLeft": "6px"}),
+                    ], className="d-flex align-items-center mb-3"),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Img(src="/dash/assets/images/heatmap.jpg",
+                                     style={"width": "100%", "borderRadius": "10px",
+                                            "boxShadow": "0 2px 8px rgba(0,0,0,0.08)"}),
+                        ], md=7),
+                        dbc.Col([
+                            html.Div([
+                                html.Div([
+                                    html.Span("19–20", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("ตั้งค่าเหมือนเดิม เปลี่ยน Mode เป็น Heatmap Slider รายเดือน", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("21", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("Stats Cards แสดงค่าเดียวกับ Raw Data", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("22", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("Temporal Trend รายเดือน เห็น seasonal pattern ขึ้นลงทุกปี", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("23", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Span("Top Ranking เรียงตาม LST เฉลี่ยสูงสุด", style={"fontSize": "0.82rem", "color": "#334155"}),
+                                ], className="mb-3 d-flex align-items-start"),
+                                html.Div([
+                                    html.Span("24", style={"backgroundColor": "#fee2e2", "color": "#991b1b", "borderRadius": "4px", "padding": "1px 7px", "fontSize": "0.75rem", "fontWeight": "700", "marginRight": "8px"}),
+                                    html.Div([
+                                        html.Div("แดงเข้ม = ต้นปี (หน้าร้อน)", style={"fontSize": "0.82rem", "fontWeight": "600", "color": "#0f172a"}),
+                                        html.Div("สีอ่อน = กลางปี (ฤดูฝน)", style={"fontSize": "0.8rem", "color": "#64748b"}),
+                                        html.Div("2015–2019 เข้มกว่า 2020 เป็นต้นมา → อุณหภูมิลดลงระยะยาว", style={"fontSize": "0.8rem", "color": "#64748b", "lineHeight": "1.6"}),
+                                    ]),
+                                ], className="mb-0 d-flex align-items-start"),
+                            ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "16px", "height": "100%"}),
+                        ], md=5),
+                    ], className="g-3"),
+                ], style={**CARD_STYLE, "padding": "24px", "borderTop": "3px solid #f97316"}),
+            ], lg=12, className="mb-4"),
+        ]),
+
+
+        section_divider(),
+
+        # สรุปผลการวิเคราะห์
+        dbc.Row([
+            dbc.Col([
+                section_label("ตัวอย่างการสรุปผล", "📌"),
+                html.H4("ขอนแก่น — LST ช่วงปี 2015–2025",
+                        style={**SECTION_HEADER_STYLE, "fontSize": "1.15rem"}, className="mb-4"),
             ], lg=12)
         ]),
         dbc.Row([
             dbc.Col([
                 html.Div([
                     html.Div([
-                        html.Span("🌍", style={"fontSize": "1.3rem", "marginRight": "8px"}),
-                        html.Span("Raw Data Mode", style={"fontFamily": "'Prompt', sans-serif", "fontWeight": "700", "fontSize": "0.95rem"}),
-                    ], className="d-flex align-items-center mb-3"),
-                    kv_row("ข้อมูล:", "Mean ของตัวแปรจริงในช่วงเดือนที่เลือก  group by พื้นที่"),
-                    kv_row("สี:", "ยิ่งเข้ม = ค่ายิ่งสูง"),
-                    html.Div(style={"height": "8px"}),
-                    html.Div([
+                        html.Div("📊", style={"fontSize": "1.4rem", "marginBottom": "6px"}),
+                        html.Div("สิ่งที่พบจากหน้า Dashboard",
+                                 style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a", "marginBottom": "10px"}),
                         html.Div([
-                            html.Span("🌿 NDVI", style={"fontSize": "0.8rem", "fontWeight": "600"}),
-                            html.Span(" → Greens", style={"fontSize": "0.78rem", "color": "#64748b"}),
-                        ], className="mb-1"),
-                        html.Div([html.Span("💧 Soil Moisture", style={"fontSize": "0.8rem", "fontWeight": "600"}), html.Span(" → YlGnBu", style={"fontSize": "0.78rem", "color": "#64748b"})], className="mb-1"),
-                        html.Div([html.Span("🌧️ Rainfall", style={"fontSize": "0.8rem", "fontWeight": "600"}), html.Span(" → Blues", style={"fontSize": "0.78rem", "color": "#64748b"})], className="mb-1"),
-                        html.Div([html.Span("🌡️ LST", style={"fontSize": "0.8rem", "fontWeight": "600"}), html.Span(" → Reds", style={"fontSize": "0.78rem", "color": "#64748b"})], className="mb-1"),
-                        html.Div([html.Span("🔥 Fire Count", style={"fontSize": "0.8rem", "fontWeight": "600"}), html.Span(" → Oranges", style={"fontSize": "0.78rem", "color": "#64748b"})], className="mb-1"),
-                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "8px", "padding": "10px 14px", "marginBottom": "10px"}),
-                    kv_row("Scale:", "Min-Max ที่กำหนดไว้ล่วงหน้า  NDVI[0,1]  LST[0,50]  Rain[0,3700]  SM[0,1]  Fire[0,80]"),
-                ], style={**CARD_STYLE, "borderTop": "3px solid #0ea5e9"}),
-            ], lg=4, className="mb-4"),
+                            html.Div([
+                                html.Span("→ ", style={"color": "#0ea5e9", "fontWeight": "700"}),
+                                html.Span("LST ของขอนแก่นไม่เคยพุ่งเกิน 3.5 ตลอด 10 ปี", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ], className="mb-1"),
+                            html.Div([
+                                html.Span("→ ", style={"color": "#0ea5e9", "fontWeight": "700"}),
+                                html.Span("แต่ Top 10 ชี้ให้เห็นว่า Waeng Noi, Tha Nang Naeo มีค่า DTW สูงสุดที่ 2.69 สูงกว่าตำบลอื่นอย่างเห็นได้ชัด", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ], className="mb-1"),
+                            html.Div([
+                                html.Span("→ ", style={"color": "#0ea5e9", "fontWeight": "700"}),
+                                html.Span("จึงนำมาเจาะลึกต่อใน Map Explorer", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ]),
+                        ]),
+                    ], style={"backgroundColor": "#eff6ff", "borderRadius": "10px", "padding": "16px", "height": "100%"}),
+                ], style={"height": "100%"}),
+            ], md=4, className="mb-3"),
             dbc.Col([
                 html.Div([
                     html.Div([
-                        html.Span("⚡", style={"fontSize": "1.3rem", "marginRight": "8px"}),
-                        html.Span("Deviation Mode (DTW)", style={"fontFamily": "'Prompt', sans-serif", "fontWeight": "700", "fontSize": "0.95rem"}),
-                    ], className="d-flex align-items-center mb-3"),
-                    kv_row("ข้อมูล:", "Median DTW Index ของแต่ละพื้นที่ในช่วงปีที่เลือก"),
-                    kv_row("สี:", "Reds  (แดงเข้ม = ฉีกตัวจาก baseline มาก)"),
-                    html.Div(style={"height": "8px"}),
-                    html.Div("Scale ตามระดับที่เลือก:", style={"fontSize": "0.82rem", "fontWeight": "600", "color": "#0f172a", "marginBottom": "6px"}),
-                    html.Div([
-                        flow_item("All Provinces →", "0 – 10 (ค่ามาตรฐาน)"),
-                        flow_item("NDVI / Rain / SM →", "0 – 15"),
-                        flow_item("LST →", "0 – 22"),
-                        flow_item("Fire Count →", "0 – 1,230"),
-                    ], style={"backgroundColor": "#fff5f5", "borderRadius": "8px", "padding": "10px 14px"}),
-                ], style={**CARD_STYLE, "borderTop": "3px solid #ef4444"}),
-            ], lg=4, className="mb-4"),
+                        html.Div("🗺️", style={"fontSize": "1.4rem", "marginBottom": "6px"}),
+                        html.Div("สิ่งที่พบจากหน้า Map Explorer",
+                                 style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a", "marginBottom": "10px"}),
+                        html.Div([
+                            html.Div([
+                                html.Span("→ ", style={"color": "#0ea5e9", "fontWeight": "700"}),
+                                html.Span("LST เฉลี่ยทั้งอำเภอ 33.27°C ทุกตำบลค่าใกล้เคียงกัน (33.61 – 32.99°C)", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ], className="mb-1"),
+                            html.Div([
+                                html.Span("→ ", style={"color": "#0ea5e9", "fontWeight": "700"}),
+                                html.Span("Deviation + Temporal Trend ชี้ว่า DTW สูงเพราะอุณหภูมิลดลงเรื่อยๆ ไม่ใช่สูงขึ้น", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ], className="mb-1"),
+                            html.Div([
+                                html.Span("→ ", style={"color": "#0ea5e9", "fontWeight": "700"}),
+                                html.Span("Heatmap ยืนยันว่าสีแดงช่วง 2015–2019 เข้มกว่าช่วงหลังอย่างชัดเจน", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ]),
+                        ]),
+                    ], style={"backgroundColor": "#f0fdf4", "borderRadius": "10px", "padding": "16px", "height": "100%"}),
+                ], style={"height": "100%"}),
+            ], md=4, className="mb-3"),
             dbc.Col([
                 html.Div([
                     html.Div([
-                        html.Span("🔥", style={"fontSize": "1.3rem", "marginRight": "8px"}),
-                        html.Span("Heatmap Mode", style={"fontFamily": "'Prompt', sans-serif", "fontWeight": "700", "fontSize": "0.95rem"}),
-                    ], className="d-flex align-items-center mb-3"),
-                    kv_row("ข้อมูล:", "Pivot Table  แกน Y = พื้นที่  แกน X = เดือน"),
-                    kv_row("ค่า Cell:", "Mean ของตัวแปรในเดือนนั้น"),
-                    kv_row("จำกัด:", "แสดงสูงสุด 50 พื้นที่ที่มีค่าเฉลี่ยสูงสุด"),
-                    kv_row("เรียง:", "จากมากไปน้อยตามค่าเฉลี่ยรวมตลอดช่วงเวลา"),
-                ], style={**CARD_STYLE, "borderTop": "3px solid #f97316"}),
-            ], lg=4, className="mb-4"),
-        ]),
+                        html.Div("💡", style={"fontSize": "1.4rem", "marginBottom": "6px"}),
+                        html.Div("บทเรียนสำคัญ",
+                                 style={"fontWeight": "700", "fontSize": "0.88rem", "color": "#0f172a", "marginBottom": "10px"}),
+                        html.Div([
+                            html.Div([
+                                html.Span("→ ", style={"color": "#10b981", "fontWeight": "700"}),
+                                html.Span("Waeng Noi มี DTW สูงสุด แต่การเปลี่ยนแปลงเป็นทิศทางที่ดีขึ้น", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ], className="mb-1"),
+                            html.Div([
+                                html.Span("→ ", style={"color": "#10b981", "fontWeight": "700"}),
+                                html.Span("DTW สูง ≠ สถานการณ์แย่เสมอไป", style={"fontSize": "0.82rem", "color": "#334155", "fontWeight": "600"}),
+                            ], className="mb-1"),
+                            html.Div([
+                                html.Span("→ ", style={"color": "#10b981", "fontWeight": "700"}),
+                                html.Span("ต้องดู Raw Data + Heatmap ประกอบเพื่อเข้าใจทิศทางที่แท้จริง", style={"fontSize": "0.82rem", "color": "#334155"}),
+                            ]),
+                        ]),
+                    ], style={"backgroundColor": "#f0fdf4", "borderRadius": "10px", "padding": "16px",
+                               "borderLeft": "3px solid #10b981", "height": "100%"}),
+                ], style={"height": "100%"}),
+            ], md=4, className="mb-3"),
+        ], className="g-2 mb-4"),
 
-        # Sidebar Stats
+        # สรุปรวม
         dbc.Row([
             dbc.Col([
-                guide_section_card("📊", "Statistics Cards (Average / Max / Min)",
-                    "สรุปสถิติของพื้นที่ในขอบเขตที่เลือก",
-                    html.Div([
-                        kv_row("ข้อมูล:", "stats_grouped  group by พื้นที่ย่อยสุดในขอบเขตที่เลือก"),
-                        kv_row("Raw Mode:", "Mean ของตัวแปรจริง"),
-                        kv_row("DTW Mode:", "Median ของ DTW Index"),
-                        html.Div(style={"height": "8px"}),
-                        kv_row("Average:", "Mean ของทุกพื้นที่ใน scope"),
-                        kv_row("Max / Min:", "พื้นที่ที่มีค่าสูง/ต่ำสุด + ชื่อที่ตั้ง"),
-                    ])
-                )
-            ], lg=4, className="mb-4"),
+                html.Div([
+                    html.Span("📝 ", style={"fontSize": "1rem"}),
+                    html.Span("ตัวอย่างการสรุปผล: ", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem"}),
+                    html.Span(
+                        "แม้ Waeng Noi จะมีค่า DTW ของ LST สูงที่สุดในจังหวัด แต่เมื่อวิเคราะห์ร่วมกับค่าจริงและแนวโน้มรายปีแล้ว พบว่าการเปลี่ยนแปลงนั้นเป็นไปในทิศทางที่ดีขึ้น คืออุณหภูมิพื้นผิวในขอนแก่นมีแนวโน้มลดลงในระยะยาว ซึ่งแสดงให้เห็นว่า ค่า DTW สูงไม่ได้หมายความว่าสถานการณ์แย่เสมอไป จำเป็นต้องนำมาดูร่วมกับ Raw Data และ Heatmap เพื่อทำความเข้าใจทิศทางที่แท้จริงของการเปลี่ยนแปลง",
+                        style={"fontSize": "0.85rem", "color": "#334155", "lineHeight": "1.8"}
+                    ),
+                ], style={"backgroundColor": "#f0f9ff", "border": "1px solid #bae6fd",
+                           "borderLeft": "4px solid #0ea5e9", "borderRadius": "0 10px 10px 0",
+                           "padding": "16px 20px"}),
+            ], lg=12, className="mb-4"),
+        ]),
+        dbc.Row([
             dbc.Col([
-                guide_section_card("📉", "Temporal Trend Chart",
-                    "กราฟแนวโน้มตามเวลาพร้อม Trendline",
+                html.Div([
+                    html.H5("สรุปการใช้งานหน้านี้ตามลำดับ",
+                            className="fw-bold mb-3",
+                            style={"fontFamily": "'Prompt', sans-serif", "color": "#0f172a", "fontSize": "1rem"}),
                     html.Div([
-                        html.Div("Raw / Heatmap Mode:", style={"fontWeight": "600", "fontSize": "0.82rem", "color": "#0f172a", "marginBottom": "6px"}),
                         html.Div([
-                            kv_row("แกน X:", "เดือน (Monthly)"),
-                            kv_row("แกน Y:", "Mean ของตัวแปรจริงรวมทุกพื้นที่"),
-                            kv_row("เส้นน้ำเงิน:", "Observed (ค่าจริงรายเดือน)"),
-                            kv_row("เส้นแดงประ:", "Trendline (Linear Regression y=mx+b)"),
-                        ]),
-                        html.Div(style={"height": "8px"}),
-                        html.Div("DTW Mode:", style={"fontWeight": "600", "fontSize": "0.82rem", "color": "#0f172a", "marginBottom": "6px"}),
+                            html.Span("1.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("เลือก Variable + Province / District ", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ แผนที่ zoom เข้าหาพื้นที่ที่สนใจอัตโนมัติ", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
                         html.Div([
-                            kv_row("แกน X:", "ปี (Yearly)"),
-                            kv_row("แกน Y:", "Median DTW Index รวมทุกพื้นที่"),
-                        ]),
-                        html.Div(style={"height": "8px"}),
-                        warning_box("Trendline เป็น Linear Regression อย่างง่าย เหมาะดูทิศทางภาพรวมเท่านั้น ไม่ใช่การพยากรณ์ และไม่ได้คำนึงถึง Seasonality"),
-                    ])
-                )
-            ], lg=4, className="mb-4"),
-            dbc.Col([
-                guide_section_card("🏅", "Top Areas Ranking",
-                    "อันดับพื้นที่ตามค่าตัวแปรในขอบเขตที่เลือก",
-                    html.Div([
-                        kv_row("ข้อมูล:", "map_agg — ชุดเดียวกับที่แสดงบนแผนที่"),
-                        kv_row("Raw Mode:", "Mean group by พื้นที่"),
-                        kv_row("DTW Mode:", "Median DTW group by พื้นที่"),
-                        kv_row("แสดง:", "Top 10  เรียงจากมากไปน้อย"),
-                        kv_row("ชื่อพื้นที่:", "'ตำบล, อำเภอ' หรือ 'จังหวัด' ตาม scope"),
-                        html.Div(style={"height": "12px"}),
-                        info_box([
-                            html.Div("ความสัมพันธ์ระหว่างกราฟ", style={"fontWeight": "700", "fontSize": "0.82rem", "color": "#0369a1", "marginBottom": "8px"}),
-                            html.Div("🗺️ แผนที่ ↔ Ranking  ใช้ข้อมูลชุดเดียวกัน (map_agg)", style={"fontSize": "0.8rem", "color": "#334155", "marginBottom": "4px"}),
-                            html.Div("📊 Stats Cards  ใช้ข้อมูลละเอียดกว่า (stats_grouped) เพื่อระบุ Max/Min ได้แม่นยำขึ้น", style={"fontSize": "0.8rem", "color": "#334155", "marginBottom": "4px"}),
-                            html.Div("📉 Temporal Trend  ใช้ข้อมูลรวมตามเวลา ไม่แยกรายพื้นที่", style={"fontSize": "0.8rem", "color": "#334155"}),
-                        ]),
-                    ])
-                )
-            ], lg=4, className="mb-4"),
+                            html.Span("2.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู Raw Data Mode ", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ รู้ค่าจริงของแต่ละพื้นที่ว่าสูงต่ำอย่างไร", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("3.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู Deviation Mode ", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ รู้ว่าพื้นที่ไหนมีรูปแบบเบี่ยงเบนจาก baseline มากที่สุด", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("4.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("ดู Heatmap Mode ", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ เห็นภาพรวมของทุกพื้นที่ในทุกช่วงเวลาพร้อมกัน", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-2 d-flex align-items-start"),
+                        html.Div([
+                            html.Span("5.", style={"fontWeight": "700", "color": "#0ea5e9", "minWidth": "24px", "display": "inline-block"}),
+                            html.Span("เทียบ Raw กับ Deviation ", style={"fontWeight": "700", "color": "#0f172a", "fontSize": "0.88rem", "marginRight": "8px"}),
+                            html.Span("→ เข้าใจว่าค่า DTW สูง หมายความว่า 'ดีขึ้น' หรือ 'แย่ลง'", style={"fontSize": "0.85rem", "color": "#64748b"}),
+                        ], className="mb-0 d-flex align-items-start"),
+                    ], style={"backgroundColor": "#f8fafc", "borderRadius": "10px", "padding": "16px"}),
+                ], style={**CARD_STYLE, "padding": "24px"}),
+            ], lg=12, className="mb-4"),
         ]),
 
     ], style={"maxWidth": "1100px"}, className="py-5"),
